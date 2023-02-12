@@ -1,36 +1,35 @@
-var express = require("express");
-var router = express.Router();
-const { getMysql } = require("../utils/mysql");
+var express = require('express')
+var router = express.Router()
+const { execMysql } = require('../utils/mysql')
 
-const queryUsers = (callback) => {
-  getMysql(`SELECT * FROM user`, (rows) => {
-    callback(rows);
-  });
-};
+router.post('/add', (req, res, next) => {
+  const { username, password } = req.body
+  const sql = 'INSERT INTO user(username, password) VALUES(?,?);'
+  const addParams = [username, password]
+  execMysql(sql, addParams, (rows) => {
+    res.send({
+      data: 'success',
+    })
+  })
+})
 
-const queryUsersDetail = (id, callback) => {
-  getMysql(`SELECT * FROM user where id = ${id}`, (rows) => {
-    callback(rows);
-  });
-};
-
-/* GET home page. */
-router.get("/detail", function (req, res, next) {
-  const { id } = req.query;
-  queryUsersDetail(id, (rows) => {
+router.get('/detail', (req, res, next) => {
+  const { id } = req.query
+  const sql = `SELECT * FROM user where id = ${id};`
+  execMysql(sql, (rows) => {
     res.send({
       data: rows[0],
-    });
-  });
-});
+    })
+  })
+})
 
-/* GET home page. */
-router.get("/", function (req, res, next) {
-  queryUsers((rows) => {
+router.get('/', (req, res, next) => {
+  const sql = `SELECT * FROM user;`
+  execMysql(sql, (rows) => {
     res.send({
       data: rows,
-    });
-  });
-});
+    })
+  })
+})
 
-module.exports = router;
+module.exports = router
