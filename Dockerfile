@@ -9,5 +9,3 @@ RUN npm config set registry https://registry.npmmirror.com && npm install
 EXPOSE 3000
 # 运行命令
 CMD [ "npm", "start" ]
-# 在最后，以node用户来运行应用程序
-USER node
