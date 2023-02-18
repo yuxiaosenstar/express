@@ -3,6 +3,7 @@ FROM node:16
 WORKDIR /data/app
 # 拷贝应用程序
 COPY . .
+VOLUME ["/root/upload/","/data/app/public/upload/"]
 RUN npm config set registry https://registry.npmmirror.com && npm install
 # 暴露端口
 EXPOSE 3000
