@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const multer = require('multer')
+const { readdirSync } = require('fs')
 
 const uploadFolder = 'public/upload/'
 
@@ -23,6 +24,13 @@ router.post('/', upload.single('file'), (req, res) => {
   // 需要返回图片的访问地址    域名+文件名
   const filename = req.file.filename
   res.json({ filename })
+})
+
+router.get('/files', (req, res) => {
+  const uploadList = readdirSync('./public/upload') || []
+  res.send({
+    fileList: uploadList,
+  })
 })
 
 module.exports = router
