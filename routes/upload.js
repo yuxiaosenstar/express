@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const multer = require('multer')
-const { readdirSync } = require('fs')
+const { readdir, unlink } = require('fs')
+const path = require('path')
 
 const uploadFolder = 'public/upload/'
 
@@ -27,9 +28,36 @@ router.post('/', upload.single('file'), (req, res) => {
 })
 
 router.get('/files', (req, res) => {
-  const uploadList = readdirSync('./public/upload') || []
-  res.send({
-    fileList: uploadList,
+  const uploadPath = path.resolve(__dirname, '../public/upload/')
+  readdir(uploadPath, (err, data) => {
+    if (err) {
+      res.send({
+        success: false,
+        fileList: [],
+        reason: JSON.stringify(err),
+      })
+    } else {
+      res.send({
+        success: true,
+        fileList: data || [],
+      })
+    }
+  })
+})
+
+router.post('/del', (req, res) => {
+  const uploadPath = path.resolve(__dirname, '../public/upload/')
+  unlink(uploadPath + '/' + req.body.filename, (err) => {
+    if (err) {
+      res.send({
+        success: false,
+        reason: JSON.stringify(err),
+      })
+    } else {
+      res.send({
+        success: true,
+      })
+    }
   })
 })
 
