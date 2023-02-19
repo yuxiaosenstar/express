@@ -3,6 +3,7 @@ const router = express.Router()
 const multer = require('multer')
 const { readdir, unlink } = require('fs')
 const path = require('path')
+const instance = require('../utils/scoket')
 
 const uploadFolder = 'public/upload/'
 
@@ -25,6 +26,7 @@ router.post('/', upload.single('file'), (req, res) => {
   // 需要返回图片的访问地址    域名+文件名
   const filename = req.file.filename
   res.json({ filename })
+  instance.ws.send('上传了文件，请刷新列表')
 })
 
 router.get('/files', (req, res) => {
@@ -58,6 +60,7 @@ router.post('/del', (req, res) => {
         success: true,
       })
     }
+    instance.ws.send('删除了文件，请刷新列表')
   })
 })
 

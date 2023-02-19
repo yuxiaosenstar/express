@@ -4,18 +4,18 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const cors = require('cors')
+const fs = require('fs')
+
 const app = express()
 
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
-app.use(express.static('public'))
 app.use(cors())
+app.use(express.static(path.join(__dirname, 'public')))
 
-const { readdirSync } = require('fs')
-const routes = readdirSync('./routes')
-routes.forEach((fileName) => {
+fs.readdirSync('./routes').forEach((fileName) => {
   fileName = fileName.split('.')[0]
   let router = require('./routes/' + fileName)
   app.use('/' + (fileName == 'index' ? '' : fileName), router)
