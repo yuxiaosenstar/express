@@ -1,5 +1,5 @@
 const links = {}
-const linkTime = 120000
+const linkTime = 1200000
 
 function pushLink(key, ws) {
   links[key] = ws
